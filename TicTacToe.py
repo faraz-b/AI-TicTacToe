@@ -5,8 +5,6 @@
 
 import time, random, argparse
 
-CPU_DIFFICULTY = 500
-
 class TicTacToe():
     ''' Player vs CPU TicTacToe game (Impossible Mode).
     CPU Performs random playouts on all legal moves based on a given board state. 
