@@ -3,7 +3,9 @@
 # | Date Created: June 18, 2020 | #
 # +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ # 
 
-import time, random
+import time, random, argparse
+
+CPU_DIFFICULTY = 500
 
 class TicTacToe():
     ''' Player vs CPU TicTacToe game (Impossible Mode).
@@ -16,6 +18,7 @@ class TicTacToe():
         self._board = {i: ' ' for i in range(9)}
         self._player_piece = 'X'
         self._cpu_piece = 'O'
+        self.cpu_difficulty = 500
         self._finished = False
         self._occupied = set()
         self._cyan = '\u001b[36;1m'
@@ -23,13 +26,14 @@ class TicTacToe():
         self._green= '\u001b[32m'
         self._blue = '\u001b[34m'
         self._reset = '\u001b[0m'
+        self.parse_arguments()
         self.title_screen()
         # MAIN GAME LOOP
         while not self._finished:
             self.print_board(self._board)
             turn = self.actions(self._board)
             if turn == 'X': self.user_input()
-            else: self.cpu_turn(100, False)
+            else: self.cpu_turn(self.cpu_difficulty, False)
             self.state = self.check_state(self._board, main=True)
             if self.state == 'X' or self.state == 'O' or self.state == '-': 
                 self._finished = True
@@ -286,6 +290,15 @@ class TicTacToe():
             else: 
                 self.set_index(int(user_index), self._player_piece)
                 break
+    
+    def parse_arguments(self):
+        parser = argparse.ArgumentParser(description='Play TicTacToe against AI CPU')
+        parser.add_argument('-d', '--difficulty', type=int, help='set the CPU difficulty')
+        args = parser.parse_args()
+        if (args.difficulty != None):
+            self.cpu_difficulty = args.difficulty
+
+
 
 
     def print_board(self, board):
@@ -313,7 +326,8 @@ class TicTacToe():
             '+ Author: Faraz Borghei\n'\
             f'+ Date Created: June 18, 2020{self._reset}\n'\
             '\nWelcome to the impossible TicTacToe game you will never win!\n\n'\
-            'This program uses Monte Carlo Tree Search to play the game as CPU. Default iteration number is 5000.\n'\
+            'This program uses Monte Carlo Tree Search to play the game as CPU. Default iteration number is 500.\n'\
+            f'Current CPU difficulty is set at {self.cpu_difficulty} number of random playouts.\n'\
             '*Note: The numbers inside the board grid reprsent their index # to enter.\n\n'\
             'Please choose an appropriate index within the range 0 - 8.\n'
         print(titleStr)
